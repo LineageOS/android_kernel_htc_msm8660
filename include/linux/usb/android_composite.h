@@ -118,10 +118,10 @@ struct android_usb_platform_data {
 	 */
 	int (*match)(int product_id, int intrsharing);
 
-	/* hold a performance lock while adb_read a maximum data to keep
-	 * adb throughput level
+	/* request usb controller/phy reset during function switch
+	 * in some platfrom, we need this behavior to improve the USB stability
 	 */
-	int adb_perf_lock_on;
+	int req_reset_during_switch_func;
 };
 
 /* Platform data for "usb_mass_storage" driver. */

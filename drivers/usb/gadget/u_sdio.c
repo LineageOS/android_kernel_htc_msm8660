@@ -232,7 +232,7 @@ int gsdio_write(struct gsdio_port *port, struct usb_request *req)
 {
 	unsigned	avail;
 	char		*packet;
-	unsigned	size = req->actual;
+	unsigned	size;
 	unsigned	n;
 	int		ret = 0;
 
@@ -248,6 +248,8 @@ int gsdio_write(struct gsdio_port *port, struct usb_request *req)
 		return -ENODEV;
 	}
 
+	size = req->actual;
+	packet = req->buf;
 	pr_debug("%s: port:%p port#%d req:%p actual:%d n_read:%d\n",
 			__func__, port, port->port_num, req,
 			req->actual, port->n_read);
@@ -534,6 +536,20 @@ void gsdio_tx_pull(struct work_struct *w)
 			goto tx_pull_end;
 		}
 
+		/* Do not send data if DTR is not set */
+		if (!(port->cbits_to_modem & TIOCM_DTR)) {
+			pr_info("%s: DTR low. flush %d bytes.", __func__, avail);
+			/* check if usb is still active */
+			if (!port->port_usb) {
+				gsdio_free_req(in, req);
+			} else {
+				list_add(&req->list, pool);
+				port->wp_len++;
+			}
+			goto tx_pull_end;
+		}
+
+
 		req->length = avail;
 
 		spin_unlock_irq(&port->port_lock);
@@ -639,11 +655,10 @@ void gsdio_ctrl_wq(struct work_struct *w)
 			port->cbits_to_modem, ~(port->cbits_to_modem));
 }
 
-void gsdio_ctrl_notify_modem(void *gptr, u8 portno, int ctrl_bits)
+void gsdio_ctrl_notify_modem(struct gserial *gser, u8 portno, int ctrl_bits)
 {
 	struct gsdio_port *port;
 	int temp;
-	struct gserial *gser = gptr;
 
 	if (portno >= n_sdio_ports) {
 		pr_err("%s: invalid portno#%d\n", __func__, portno);
@@ -1131,8 +1146,8 @@ int gsdio_setup(struct usb_gadget *g, unsigned count)
 
 	for (i = 0; i < count; i++) {
 		mutex_init(&sdio_ports[i].lock);
-		ret = gsdio_port_alloc(i, &coding, sport_info + i);
 		n_sdio_ports++;
+		ret = gsdio_port_alloc(i, &coding, sport_info + i);
 		if (ret) {
 			n_sdio_ports--;
 			pr_err("%s: sdio logical port allocation failed\n",
