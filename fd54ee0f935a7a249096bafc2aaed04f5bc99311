@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAcn//8cs\u003d",
+        "filename": "arch/arm/mach-msm/board-holiday-audio.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2013-01-17T10:40:18Z",
+      "side": 1,
+      "message": "might as well leave this alone for now as it\u0027s an unrelated change, even though this is sorta neater.",
+      "revId": "fd54ee0f935a7a249096bafc2aaed04f5bc99311",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
