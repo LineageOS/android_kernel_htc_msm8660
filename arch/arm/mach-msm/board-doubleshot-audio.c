@@ -23,15 +23,17 @@
 #include <mach/gpio.h>
 #include <mach/dal.h>
 #include <mach/tpa2051d3.h>
-#include <mach/qdsp6v2_1x/snddev_icodec.h>
-#include <mach/qdsp6v2_1x/snddev_ecodec.h>
-#include <mach/qdsp6v2_1x/snddev_hdmi.h>
+#include <mach/qdsp6v3/snddev_icodec.h>
+#include <mach/qdsp6v3/snddev_ecodec.h>
+#include <mach/qdsp6v3/snddev_hdmi.h>
+#include <mach/qdsp6v3/apr_audio.h>
+#include <mach/qdsp6v3/q6asm.h>
 #include <mach/htc_acoustic_8x60.h>
 
 #include "board-doubleshot.h"
 #include "board-doubleshot-audio-data.h"
 
-#include <mach/qdsp6v2_1x/audio_dev_ctl.h>
+#include <mach/qdsp6v3/audio_dev_ctl.h>
 
 static struct mutex bt_sco_lock;
 static struct mutex mic_lock;
@@ -522,8 +524,8 @@ void __init doubleshot_audio_init(void)
 	acoustic_register_ops(&acoustic);
 	htc_8x60_register_aic3254_ops(&aops);
 
-	/*fix voice sample rate as 8KHz for 3254 dual mic.*/
-	msm_set_voc_freq(8000, 8000);
+	/*fix voice sample rate as 48KHz for 3254 dual mic.*/
+	msm_set_voc_freq(48000, 48000);
 #endif
 	aic3254_register_ctl_ops(&cops);
 
