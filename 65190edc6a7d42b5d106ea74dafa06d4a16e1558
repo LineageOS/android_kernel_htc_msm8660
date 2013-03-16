@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAeX//7eM\u003d",
+        "filename": "arch/arm/mach-msm/acpuclock-8x60.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2013-03-16T00:08:11Z",
+      "side": 1,
+      "message": "#ifdef\n...\n#else\n...\n#endif",
+      "revId": "65190edc6a7d42b5d106ea74dafa06d4a16e1558",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
