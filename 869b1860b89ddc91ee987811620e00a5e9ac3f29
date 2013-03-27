@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAeX//3L4\u003d",
+        "filename": "arch/arm/mach-msm/Kconfig",
+        "patchSetId": 1
+      },
+      "lineNbr": 2409,
+      "author": {
+        "id": 4123
+      },
+      "writtenOn": "2013-03-27T07:05:58Z",
+      "side": 1,
+      "message": "defauly? lol. typo :)",
+      "revId": "869b1860b89ddc91ee987811620e00a5e9ac3f29",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
