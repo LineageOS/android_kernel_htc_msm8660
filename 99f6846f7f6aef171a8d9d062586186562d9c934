@@ -1,0 +1,11 @@
+Change-Id: I99f6846f7f6aef171a8d9d062586186562d9c934
+Code-Review+1: Ethan Chen <intervigil@gmail.com>
+Code-Review+1: Stephen Pirritano <sjpirri@gmail.com>
+Code-Review+2: Pál Zoltán Illés <illespal@gmail.com>
+Verified+1: Pál Zoltán Illés <illespal@gmail.com>
+Code-Review+1: Emmanuel Utomi <emmanuelutomi@gmail.com>
+Submitted-by: Pál Zoltán Illés <illespal@gmail.com>
+Submitted-at: Thu, 28 Mar 2013 04:45:54 -0700
+Reviewed-on: http://review.cyanogenmod.org/34613
+Project: CyanogenMod/android_kernel_htc_msm8660
+Branch: refs/heads/jellybean-ds
