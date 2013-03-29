@@ -434,13 +434,6 @@ static struct q6v2audio_aic3254_ops aops = {
        .aic3254_set_mode = pyramid_aic3254_set_mode,
 };
 
-<<<<<<< HEAD
-static struct q6asm_ops qops = {
-	.get_q6_effect = pyramid_get_q6_effect_mode,
-};
-
-=======
->>>>>>> d01c75c... Added qdsp6v3
 void __init pyramid_audio_init(void)
 {
 	mutex_init(&bt_sco_lock);
@@ -453,12 +446,7 @@ void __init pyramid_audio_init(void)
 	htc_8x60_register_ecodec_ops(&eops);
 	acoustic_register_ops(&acoustic);
 	htc_8x60_register_aic3254_ops(&aops);
-<<<<<<< HEAD
-	htc_8x60_register_q6asm_ops(&qops);
-	msm_set_voc_freq(8000, 8000);
-=======
 	msm_set_voc_freq(48000, 48000);
->>>>>>> d01c75c... Added qdsp6v3
 #endif
 
 	aic3254_register_ctl_ops(&cops);
