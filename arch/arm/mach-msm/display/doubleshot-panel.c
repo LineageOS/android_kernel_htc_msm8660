@@ -30,11 +30,15 @@
 #include <mach/panel_id.h>
 #include <mach/msm_bus_board.h>
 #include <mach/debug_display.h>
+#include <mach/msm_memtypes.h>
 
 #include "../devices.h"
 #include "../board-doubleshot.h"
 #include "../devices-msm8x60.h"
 #include "../../../../drivers/video/msm/mdp_hw.h"
+
+#define MDP_VSYNC_GPIO			28
+
 
 //extern int panel_type;
 
@@ -565,6 +569,7 @@ static struct msm_bus_scale_pdata atv_bus_scale_pdata = {
 #endif
 #endif
 
+static char mipi_dsi_splash_is_enabled(void);
 static int mipi_panel_power(int on)
 {
 	int flag_on = !!on;
@@ -632,6 +637,7 @@ end:
 static struct mipi_dsi_platform_data mipi_pdata = {
 	.vsync_gpio = 28,
 	.dsi_power_save   = mipi_panel_power,
+	.splash_is_enabled = mipi_dsi_splash_is_enabled,
 };
 
 #ifdef CONFIG_FB_MSM_TVOUT
@@ -676,6 +682,18 @@ static unsigned char doubleshot_shrink_pwm(int val)
 }
 
 static struct msm_panel_common_pdata mipi_panel_data = {
+	.gpio = MDP_VSYNC_GPIO,
+	.mdp_max_clk = 200000000,
+#ifdef CONFIG_MSM_BUS_SCALING
+	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
+#endif
+	.mdp_rev = MDP_REV_41,
+#ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
+	.mem_hid = BIT(ION_CP_WB_HEAP_ID),
+#else
+	.mem_hid = MEMTYPE_EBI1,
+#endif
+	.cont_splash_enabled = 0,
 	.shrink_pwm = doubleshot_shrink_pwm,
 };
 
@@ -723,15 +741,43 @@ int mdp_core_clk_rate_table[] = {
 	200000000,
 };
 
+#ifdef CONFIG_FB_MSM_OVERLAY0_WRITEBACK
+#define MSM_FB_OVERLAY0_WRITEBACK_SIZE roundup((1376 * 768 * 3 * 2), 4096)
+#else
+#define MSM_FB_OVERLAY0_WRITEBACK_SIZE (0)
+#endif  /* CONFIG_FB_MSM_OVERLAY0_WRITEBACK */
+
+#ifdef CONFIG_FB_MSM_OVERLAY1_WRITEBACK
+#define MSM_FB_OVERLAY1_WRITEBACK_SIZE roundup((1920 * 1088 * 3 * 2), 4096)
+#else
+#define MSM_FB_OVERLAY1_WRITEBACK_SIZE (0)
+#endif  /* CONFIG_FB_MSM_OVERLAY1_WRITEBACK */
+
+
 static struct msm_panel_common_pdata mdp_pdata = {
-	.gpio = 28,
-	.mdp_core_clk_rate = 200000000,
-	.mdp_core_clk_table = mdp_core_clk_rate_table,
-	.num_mdp_clk = ARRAY_SIZE(mdp_core_clk_rate_table),
+	.gpio = MDP_VSYNC_GPIO,
+	.mdp_max_clk = 200000000,
 #ifdef CONFIG_MSM_BUS_SCALING
 	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
 #endif
+	.mdp_rev = MDP_REV_41,
+#ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
+	.mem_hid = BIT(ION_CP_WB_HEAP_ID),
+#else
+	.mem_hid = MEMTYPE_EBI1,
+#endif
+	.ov0_wb_size = MSM_FB_OVERLAY0_WRITEBACK_SIZE,
+	.ov1_wb_size = MSM_FB_OVERLAY1_WRITEBACK_SIZE,
+
+//	.gpio = 28,
+//	.mdp_core_clk_rate = 200000000,
+	.mdp_core_clk_table = mdp_core_clk_rate_table,
+	.num_mdp_clk = ARRAY_SIZE(mdp_core_clk_rate_table),
+//#ifdef CONFIG_MSM_BUS_SCALING
+//	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
+//#endif
 };
+
 
 static void __init msm_fb_add_devices(void)
 {
@@ -746,6 +792,12 @@ static void __init msm_fb_add_devices(void)
 	atv_dac_power(0);
 #endif
 }
+
+static char mipi_dsi_splash_is_enabled(void)
+{
+	return mdp_pdata.cont_splash_enabled;
+}
+
 
 /*
 TODO:
