@@ -1,4 +1,4 @@
-/* Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -90,6 +90,8 @@ struct bank_masks {
  * struct branch - branch on/off
  * @ctl_reg: clock control register
  * @en_mask: ORed with @ctl_reg to enable the clock
+ * @hwcg_reg: hardware clock gating register
+ * @hwcg_mask: ORed with @hwcg_reg to enable hardware clock gating
  * @halt_reg: halt register
  * @halt_check: type of halt check to perform
  * @halt_bit: ANDed with @halt_reg to test for clock halted
@@ -100,17 +102,25 @@ struct branch {
 	void __iomem *const ctl_reg;
 	const u32 en_mask;
 
+	void __iomem *hwcg_reg;
+	u32 hwcg_mask;
+
 	void __iomem *const halt_reg;
 	const u16 halt_check;
 	const u16 halt_bit;
 
 	void __iomem *const reset_reg;
 	const u32 reset_mask;
+
+	void __iomem *const retain_reg;
+	const u32 retain_mask;
 };
 
-int branch_reset(struct branch *clk, enum clk_reset_action action);
+int branch_reset(struct branch *b, enum clk_reset_action action);
 void __branch_clk_enable_reg(const struct branch *clk, const char *name);
 u32 __branch_clk_disable_reg(const struct branch *clk, const char *name);
+int branch_clk_handoff(struct clk *c);
+int branch_clk_set_flags(struct clk *clk, unsigned flags);
 
 /*
  * Generic clock-definition struct and macros
@@ -144,13 +154,17 @@ extern struct clk_freq_tbl rcg_dummy_freq;
 int rcg_clk_enable(struct clk *clk);
 void rcg_clk_disable(struct clk *clk);
 int rcg_clk_set_rate(struct clk *clk, unsigned long rate);
-int rcg_clk_set_min_rate(struct clk *clk, unsigned long rate);
 unsigned long rcg_clk_get_rate(struct clk *clk);
 int rcg_clk_list_rate(struct clk *clk, unsigned n);
 int rcg_clk_is_enabled(struct clk *clk);
 long rcg_clk_round_rate(struct clk *clk, unsigned long rate);
 struct clk *rcg_clk_get_parent(struct clk *c);
 int rcg_clk_handoff(struct clk *c);
+int rcg_clk_reset(struct clk *clk, enum clk_reset_action action);
+void rcg_clk_enable_hwcg(struct clk *clk);
+void rcg_clk_disable_hwcg(struct clk *clk);
+int rcg_clk_in_hwcg_mode(struct clk *c);
+int rcg_clk_set_flags(struct clk *clk, unsigned flags);
 
 /**
  * struct cdiv_clk - integer divider clock with external source selection
@@ -206,6 +220,8 @@ static inline unsigned long fixed_clk_get_rate(struct clk *clk)
 /**
  * struct pll_vote_clk - phase locked loop (HW voteable)
  * @rate: output rate
+ * @soft_vote: soft voting variable for multiple PLL software instances
+ * @soft_vote_mask: soft voting mask for multiple PLL software instances
  * @en_reg: enable register
  * @en_mask: ORed with @en_reg to enable the clock
  * @status_reg: status register
@@ -215,6 +231,8 @@ static inline unsigned long fixed_clk_get_rate(struct clk *clk)
 struct pll_vote_clk {
 	unsigned long rate;
 
+	u32 *soft_vote;
+	const u32 soft_vote_mask;
 	void __iomem *const en_reg;
 	const u32 en_mask;
 
@@ -283,6 +301,9 @@ struct clk *branch_clk_get_parent(struct clk *clk);
 int branch_clk_set_parent(struct clk *clk, struct clk *parent);
 int branch_clk_is_enabled(struct clk *clk);
 int branch_clk_reset(struct clk *c, enum clk_reset_action action);
+void branch_clk_enable_hwcg(struct clk *clk);
+void branch_clk_disable_hwcg(struct clk *clk);
+int branch_clk_in_hwcg_mode(struct clk *c);
 
 /**
  * struct measure_clk - for rate measurement debug use
@@ -315,6 +336,15 @@ extern struct fixed_clk		gnd_clk;
  * Local-clock APIs
  */
 bool local_clk_is_local(struct clk *clk);
+
+/*
+ * PLL vote clock APIs
+ */
+int pll_vote_clk_enable(struct clk *clk);
+void pll_vote_clk_disable(struct clk *clk);
+unsigned long pll_vote_clk_get_rate(struct clk *clk);
+struct clk *pll_vote_clk_get_parent(struct clk *clk);
+int pll_vote_clk_is_enabled(struct clk *clk);
 
 /*
  * Generic set-rate implementations

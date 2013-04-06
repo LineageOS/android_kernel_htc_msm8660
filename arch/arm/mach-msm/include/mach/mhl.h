@@ -98,7 +98,9 @@ typedef struct {
 //  Prototype & Extern variable, function
 //********************************************************************
 #ifdef CONFIG_FB_MSM_HDMI_MHL
+#ifndef CONFIG_MACH_DOUBLESHOT
 extern void sii9234_change_usb_owner(bool bMHL);
+#endif
 #endif
 #endif/*_MHL_H_*/
 

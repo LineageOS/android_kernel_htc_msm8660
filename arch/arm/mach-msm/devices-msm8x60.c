@@ -1754,7 +1754,7 @@ static struct resource msm_mipi_dsi_resources[] = {
 
 static struct platform_device msm_mipi_dsi_device = {
 	.name   = "mipi_dsi",
-	.id     = 0,
+	.id     = 1,
 	.num_resources  = ARRAY_SIZE(msm_mipi_dsi_resources),
 	.resource       = msm_mipi_dsi_resources,
 };
@@ -2797,15 +2797,15 @@ struct platform_device asoc_mvs_dai1 = {
 #endif
 
 struct platform_device *msm_footswitch_devices[] = {
-	FS_8X60(FS_IJPEG,	"fs_ijpeg"),
-	/*FS_8X60(FS_MDP,	"fs_mdp"),*//*re-enable when find out why mdp_p can't turn off*/
-	FS_8X60(FS_ROT,	"fs_rot"),
-	FS_8X60(FS_VED,	"fs_ved"),
-	FS_8X60(FS_VFE,	"fs_vfe"),
-	FS_8X60(FS_VPE,	"fs_vpe"),
-	FS_8X60(FS_GFX3D,	"fs_gfx3d"),
-	FS_8X60(FS_GFX2D0,	"fs_gfx2d0"),
-	FS_8X60(FS_GFX2D1,	"fs_gfx2d1"),
+	FS_8X60(FS_IJPEG,  "fs_ijpeg"),
+	FS_8X60(FS_MDP,    "fs_mdp"),
+	FS_8X60(FS_ROT,    "fs_rot"),
+	FS_8X60(FS_VED,    "fs_ved"),
+	FS_8X60(FS_VFE,    "fs_vfe"),
+	FS_8X60(FS_VPE,    "fs_vpe"),
+	FS_8X60(FS_GFX3D,  "fs_gfx3d"),
+	FS_8X60(FS_GFX2D0, "fs_gfx2d0"),
+	FS_8X60(FS_GFX2D1, "fs_gfx2d1"),
 };
 
 unsigned msm_num_footswitch_devices = ARRAY_SIZE(msm_footswitch_devices);

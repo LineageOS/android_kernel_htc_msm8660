@@ -1291,7 +1291,7 @@ static struct platform_device android_usb_device = {
 
 #endif
 
-#ifdef CONFIG_MSM_VPE
+#ifdef CONFIG_DS_MSM_VPE
 static struct resource msm_vpe_resources[] = {
 	{
 		.start	= 0x05300000,
@@ -1349,7 +1349,7 @@ static void config_gpio_table(uint32_t *table, int len)
 	}
 }
 
-#ifdef CONFIG_MSM_CAMERA
+#ifdef CONFIG_DS_MSM_CAMERA
 static uint32_t camera_off_gpio_table[] = {
 	GPIO_CFG(137, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),	/* CAM1_RST# */
 	GPIO_CFG(138, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),	/* CAM2_RST# */
@@ -1740,7 +1740,7 @@ static struct i2c_board_info msm_camera_boardinfo[] __initdata = {
 };
 #endif
 
-#ifdef CONFIG_MSM_GEMINI
+#ifdef CONFIG_DS_MSM_GEMINI
 static struct resource msm_gemini_resources[] = {
 	{
 		.start  = 0x04600000,
@@ -3021,7 +3021,7 @@ static struct platform_device ram_console_device = {
 	.resource	= ram_console_resources,
 };
 
-#ifdef CONFIG_FB_MSM_HDMI_MHL
+#ifdef CONFIG_FB_MSM_HDMI_MHL_2
 static void mhl_sii9234_1v2_power(bool enable);
 #endif
 
@@ -3092,7 +3092,7 @@ static void doubleshot_usb_dpdn_switch(int path)
 	}
 	}
 
-	#ifdef CONFIG_FB_MSM_HDMI_MHL
+	#ifdef CONFIG_FB_MSM_HDMI_MHL_2
 	sii9234_change_usb_owner((path == PATH_MHL)?1:0);
 	#endif
 }
@@ -3110,7 +3110,7 @@ static struct cable_detect_platform_data cable_detect_pdata = {
 		.usbid_amux	= PM_MPP_AIN_AMUX_CH5,
 	},
 	.config_usb_id_gpios = config_doubleshot_usb_id_gpios,
-#ifdef CONFIG_FB_MSM_HDMI_MHL
+#ifdef CONFIG_FB_MSM_HDMI_MHL_2
 	.mhl_1v2_power = mhl_sii9234_1v2_power,
 #endif
 };
@@ -3166,7 +3166,7 @@ static struct platform_device pm8058_leds = {
 	},
 };
 
-#ifdef CONFIG_FB_MSM_HDMI_MHL
+#ifdef CONFIG_FB_MSM_HDMI_MHL_2
 static struct regulator *reg_8901_l0;
 static struct regulator *reg_8058_l19;
 static struct regulator *reg_8901_l3;
@@ -3281,7 +3281,7 @@ static int mhl_sii9234_all_power(bool enable)
 	return 0;
 }
 
-#ifdef CONFIG_FB_MSM_HDMI_MHL_SII9234
+#ifdef CONFIG_FB_MSM_HDMI_MHL_SII9234_2
 static uint32_t mhl_gpio_table[] = {
 	GPIO_CFG(DOUBLESHOT_GPIO_MHL_RESET, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
 	GPIO_CFG(DOUBLESHOT_GPIO_MHL_INT, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_UP, GPIO_CFG_2MA),
@@ -5206,7 +5206,7 @@ static struct i2c_registry msm8x60_i2c_devices[] __initdata = {
 	},
 #endif
 #endif /*CONFIG_MSM_SSBI */
-#ifdef CONFIG_MSM_CAMERA
+#ifdef CONFIG_DS_MSM_CAMERA
     {
 		I2C_SURF | I2C_FFA,
 		MSM_GSBI4_QUP_I2C_BUS_ID,
@@ -5236,8 +5236,8 @@ static struct i2c_registry msm8x60_i2c_devices[] __initdata = {
 		ARRAY_SIZE(msm_i2c_gsbi7_tpa2051d3_info),
 	},
 #endif
-#ifdef CONFIG_FB_MSM_HDMI_MHL
-#ifdef CONFIG_FB_MSM_HDMI_MHL_SII9234
+#ifdef CONFIG_FB_MSM_HDMI_MHL_2
+#ifdef CONFIG_FB_MSM_HDMI_MHL_SII9234_2
 
 	{
 		I2C_SURF | I2C_FFA,
